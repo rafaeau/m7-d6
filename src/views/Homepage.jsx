@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
-import { getJobsAction } from "../redux/actions";
+import { addToFavoritesAction, getJobsAction } from "../redux/actions";
 import { useSelector, useDispatch } from 'react-redux'
 
 /* const mapStateToProps = state => ({
@@ -38,6 +38,7 @@ function Homepage({ addToFavorites }) {
 
     const jobs = useSelector(state => state.jobs)
     const errorCode = useSelector(state => state.jobs.errorCode)
+    const favorites = useSelector(state => state.favorites)
 
     const dispatch = useDispatch()
 
@@ -84,7 +85,7 @@ function Homepage({ addToFavorites }) {
                     <h6 className="mb-2 mt-1 ml-1">at <Link to={'/' + job.company_name}>{job.company_name}</Link></h6>
                     <span>
                         <Button className='fav-btn btn-sm ml-2' onClick={() => {
-                            addToFavorites(job)
+                            dispatch(addToFavoritesAction(job))
                         }}>
                             +
                         </Button>
