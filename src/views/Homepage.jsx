@@ -2,12 +2,12 @@ import React from 'react';
 import { FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import { connect } from 'react-redux';
 import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import { getJobsAction } from "../redux/actions";
+import { useSelector, useDispatch } from 'react-redux'
 
-const mapStateToProps = state => ({
+/* const mapStateToProps = state => ({
     jobs: state.jobs,
     errorCode: state.jobs.errorCode
 })
@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => ({
     getJobs: () => {
         dispatch(getJobsAction())
     }
-})
+}) */
 
 const fetchCategoriesNames = async () => {
     let resp = await fetch('https://strive-jobs-api.herokuapp.com/jobs/categories');
@@ -34,7 +34,12 @@ const fetchCategory = async (category) => {
     }
 }
 
-function Homepage({jobs, getJobs, addToFavorites}) {
+function Homepage({ addToFavorites }) {
+
+    const jobs = useSelector(state => state.jobs)
+    const errorCode = useSelector(state => state.jobs.errorCode)
+
+    const dispatch = useDispatch()
 
     const navigate = useNavigate()
 
@@ -43,12 +48,10 @@ function Homepage({jobs, getJobs, addToFavorites}) {
     const [categoriesNames, setCategoriesNames] = useState([]);
 
     useEffect(() => {
-        getJobs();
+        dispatch(getJobsAction());
         fetchCategory().then((res) => setCategory(res));
         fetchCategoriesNames().then((res) => setCategoriesNames(res));
     }, []);
-
-    console.log(jobs.jobs?.data)
 
     return (
         <>
@@ -95,4 +98,4 @@ function Homepage({jobs, getJobs, addToFavorites}) {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Homepage)
+export default Homepage
